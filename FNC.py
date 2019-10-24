@@ -54,7 +54,7 @@ def Tseitin(A, letrasProposicionalesA):
     i = -1
     s = A[0]
     while len(A) > 0:
-        if s in letrasProposicionalesA and pila[-1] = '-':
+        if s in letrasProposicionalesA and pila[-1] == '-':
             i += 1
             atomo = letrasProposicionalesB[i]
             pila = pila[:-1]
@@ -64,14 +64,14 @@ def Tseitin(A, letrasProposicionalesA):
             s = A[0]
             if len(A) > 0:
                 s = A[0]
-        elif s = ')':
+        elif s == ')':
             w = pila[-1]
             o = pila[-2]
             v = pila[-3]
             pila = pila[:len(pila)-4]
             i += 1
             atomo = letrasProposicionalesB[i]
-            l.append(atomo + "=" + v + o + w)
+            l.append(atomo + "=(" + v + o + w+")")
             s = atomo
         else:
             pila.append(s)
@@ -85,6 +85,7 @@ def Tseitin(A, letrasProposicionalesA):
     else:
         atomo = letrasProposicionalesB[i]
     for x in l:
+        print(x)
         y = enFNC(x)
         b += 'Y' + y
     b = atomo + b
@@ -101,7 +102,7 @@ def Clausula(C):
         s=C[0]
         if s == "O":
             C=C[1:]
-        elif s=="~":
+        elif s=="-":
             literal = s + C[1]
             L.append(literal)
             C = C[2:]
@@ -115,20 +116,20 @@ def Clausula(C):
 # Input: A (cadena) en notacion inorder en FNC
 # Output: L (lista), lista de listas de literales
 def formaClausal(A):
-    L=[]
-    i=0
-    while len(A)>0:
-        if A[i] == "O":
-            L.append(Clausula(A[:i]))
-            A = A[i+1:]
-            i=0
-        elif i<len(A):
-            i+=1
+    l = []
+    i = 0
+    while len(A) > 0:
+        if i == len(A) - 1:
+            l.append(Clausula(A))
+            A = ''
         else:
-            L.append(Clausula(A))
-            A =[]
-
-    return L
+            if A[i] == 'Y':
+                l.append(Clausula(A[:i]))
+                A = A[i+1:]
+                i = 0
+            else:
+                i += 1
+    return l
 
 # Test enFNC()
 # Descomente el siguiente código y corra el presente archivo
@@ -147,5 +148,5 @@ def formaClausal(A):
 
 # Test formaClausal()
 # Descomente el siguiente código y corra el presente archivo
-# f = "pO-qOrY-sOt"
-# print(formaClausal(f)) # Debe obtener [['p', '-q', 'r'], ['-s', 't']]
+#f = "pO-qOrY-sOt"
+#print(formaClausal(f)) # Debe obtener [['p', '-q', 'r'], ['-s', 't']]
